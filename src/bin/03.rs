@@ -29,22 +29,16 @@ pub fn part_one(input: &str) -> Option<u64> {
 }
 
 #[memoize]
-fn find_largest(input: String, i: usize, d: u64) -> u64 {
-    if i == input.len() || d == 0 {
+fn f(mut input: String, d: u64) -> u64 {
+    if input.is_empty() || d == 0 {
         return 0;
     }
-    let v = input.chars().nth(i).unwrap() as u64 - '0' as u64;
-    find_largest(input.clone(), i + 1, d).max(v + 10 * find_largest(input, i + 1, d - 1))
+    let v = input.pop().unwrap() as u64 - '0' as u64;
+    f(input.clone(), d).max(v + 10 * f(input, d - 1))
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    let mut total: u64 = 0;
-    for bank in input.lines() {
-        let bank: String = bank.chars().rev().collect();
-        total = total.strict_add(find_largest(bank.clone(), 0, 12));
-    }
-
-    Some(total)
+    Some(input.lines().map(|l| f(l.to_string(), 12)).sum())
 }
 
 #[cfg(test)]
