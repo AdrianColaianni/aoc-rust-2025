@@ -15,7 +15,7 @@ fn check_sides(input: &Vec<Vec<bool>>, p: (usize, usize), sides: &Vec<(isize, is
     v < 4
 }
 
-pub fn part_one(input: &str) -> Option<u64> {
+pub fn part_one(input: &str) -> Option<usize> {
     let sides: Vec<(isize, isize)> = vec![
         (-1, -1),
         (-1, 0),
@@ -166,7 +166,7 @@ fn find(input: &Vec<Vec<bool>>) -> Vec<(usize, usize)> {
     res
 }
 
-pub fn part_two(input: &str) -> Option<u64> {
+pub fn part_two(input: &str) -> Option<usize> {
     let mut input: Vec<Vec<bool>> = input
         .lines()
         .map(|l| l.chars().map(|c| c == '@').collect())
@@ -184,7 +184,7 @@ pub fn part_two(input: &str) -> Option<u64> {
         }
     }
 
-    Some(t as u64)
+    Some(t)
 }
 
 #[cfg(test)]

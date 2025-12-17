@@ -1,13 +1,13 @@
 advent_of_code::solution!(2);
 
-pub fn part_one(input: &str) -> Option<u64> {
+pub fn part_one(input: &str) -> Option<usize> {
     let mut count = 0;
     for range in input.split(',') {
         let mut range = range.split('-');
-        let start: u64 = range.next().unwrap().trim().parse().unwrap();
-        let end: u64 = range.next().unwrap().trim().parse().unwrap();
+        let start: usize = range.next().unwrap().trim().parse().unwrap();
+        let end: usize = range.next().unwrap().trim().parse().unwrap();
         for i in start..=end {
-            let l = 10_u64.pow(len(i) / 2);
+            let l = 10_usize.pow(len(i) / 2);
             if i / l == i % l {
                 count += i;
             }
@@ -16,7 +16,7 @@ pub fn part_one(input: &str) -> Option<u64> {
     Some(count)
 }
 
-fn len(n: u64) -> u32 {
+fn len(n: usize) -> u32 {
     let mut p = 10;
     let mut c = 1;
     while n >= p {
@@ -26,12 +26,12 @@ fn len(n: u64) -> u32 {
     c
 }
 
-pub fn part_two(input: &str) -> Option<u64> {
+pub fn part_two(input: &str) -> Option<usize> {
     let mut count = 0;
     for range in input.split(',') {
         let mut range = range.split('-');
-        let start: u64 = range.next().unwrap().trim().parse().unwrap();
-        let end: u64 = range.next().unwrap().trim().parse().unwrap();
+        let start: usize = range.next().unwrap().trim().parse().unwrap();
+        let end: usize = range.next().unwrap().trim().parse().unwrap();
         for num in start..=end {
             let l = len(num);
             // println!("{}: {}", num, l);
@@ -55,13 +55,13 @@ pub fn part_two(input: &str) -> Option<u64> {
     Some(count)
 }
 
-fn int_at(n: u64, r: std::ops::Range<u32>) -> u64 {
+fn int_at(n: usize, r: std::ops::Range<u32>) -> usize {
     let l = len(n) - 1;
     let mut a = 0;
 
-    for (p, i) in r.enumerate() {
+    for i in r {
         a *= 10;
-        let mut t = n / 10_u64.pow(l - i);
+        let mut t = n / 10_usize.pow(l - i);
         t %= 10;
         a += t;
     }

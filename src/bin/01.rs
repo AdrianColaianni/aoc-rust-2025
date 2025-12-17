@@ -1,11 +1,11 @@
 advent_of_code::solution!(1);
 
-pub fn part_one(input: &str) -> Option<u64> {
-    let mut dial: u64 = 50;
+pub fn part_one(input: &str) -> Option<usize> {
+    let mut dial: usize = 50;
     let mut count = 0;
     for line in input.lines() {
         let left = line.get(..1).unwrap() == "L";
-        let mut amt: u64 = line.get(1..).unwrap().parse().unwrap();
+        let mut amt: usize = line.get(1..).unwrap().parse().unwrap();
 
         if left {
             if amt > 100 {
@@ -25,7 +25,7 @@ pub fn part_one(input: &str) -> Option<u64> {
     Some(count)
 }
 
-pub fn part_two(input: &str) -> Option<u64> {
+pub fn part_two(input: &str) -> Option<usize> {
     let mut dial: i32 = 50;
     let mut count = 0;
     for line in input.lines() {

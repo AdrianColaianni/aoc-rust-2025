@@ -2,7 +2,7 @@ use memoize::memoize;
 
 advent_of_code::solution!(3);
 
-pub fn part_one(input: &str) -> Option<u64> {
+pub fn part_one(input: &str) -> Option<usize> {
     let mut total = 0;
     for bank in input.lines() {
         let mut firsti: usize = 0;
@@ -21,7 +21,7 @@ pub fn part_one(input: &str) -> Option<u64> {
                 break;
             }
         }
-        let v = (first as u64 - '0' as u64) * 10 + (second as u64 - '0' as u64);
+        let v = (first as usize - '0' as usize) * 10 + (second as usize - '0' as usize);
         total += v;
     }
 
@@ -29,15 +29,15 @@ pub fn part_one(input: &str) -> Option<u64> {
 }
 
 #[memoize]
-fn f(mut input: String, d: u64) -> u64 {
+fn f(mut input: String, d: usize) -> usize {
     if input.is_empty() || d == 0 {
         return 0;
     }
-    let v = input.pop().unwrap() as u64 - '0' as u64;
+    let v = input.pop().unwrap() as usize - '0' as usize;
     f(input.clone(), d).max(v + 10 * f(input, d - 1))
 }
 
-pub fn part_two(input: &str) -> Option<u64> {
+pub fn part_two(input: &str) -> Option<usize> {
     Some(input.lines().map(|l| f(l.to_string(), 12)).sum())
 }
 
