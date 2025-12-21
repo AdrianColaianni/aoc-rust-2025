@@ -1,4 +1,4 @@
-use petgraph::{Graph, visit::Dfs};
+use petgraph::{Graph, Undirected, visit::Dfs};
 use std::sync::OnceLock;
 
 static CONNECTION_COUNT: OnceLock<usize> = OnceLock::new();
@@ -87,8 +87,56 @@ pub fn part_one(input: &str) -> Option<usize> {
     Some(ans)
 }
 
+fn all_connected(g: &Graph<Pos, f32, Undirected>) -> bool {
+    // Exit if there aren't enough edges for a full circuit
+    if g.edge_count() < g.node_count() {
+        return false;
+    }
+
+    // Exit if there's a lonely node
+    for n in g.node_indices() {
+        if g.neighbors(n).count() == 0 {
+            return false;
+        }
+    }
+
+    // Test if first node is connected to every node
+    let n = g.node_indices().next().unwrap();
+    let mut d = Dfs::new(g, n);
+    let mut c = 0;
+    while let Some(_) = d.next(g) {
+        c += 1;
+    }
+
+    c == g.node_count()
+}
+
 pub fn part_two(input: &str) -> Option<usize> {
-    None
+    let mut g: Graph<Pos, f32, _> = Graph::new_undirected();
+    let mut ans = 0;
+
+    // Build graph
+    for l in input.lines() {
+        g.add_node(l.into());
+    }
+    let ni: Vec<_> = g.node_indices().collect();
+    let mut v: Vec<_> = Vec::new();
+    for i in 0..ni.len() {
+        for j in i + 1..ni.len() {
+            v.push((ni[i], ni[j], g[ni[i]].dist(&g[ni[j]])));
+        }
+    }
+    v.sort_by(|x, y| x.2.total_cmp(&y.2));
+
+    for (a, b, w) in v {
+        g.add_edge(a, b, w);
+        if all_connected(&g) {
+            ans = g[a].x * g[b].x;
+            break;
+        }
+    }
+
+    Some(ans)
 }
 
 #[cfg(test)]
@@ -97,8 +145,8 @@ mod tests {
 
     #[test]
     fn test_part_one() {
-        let result = part_one(&advent_of_code::template::read_file("examples", DAY));
         CONNECTION_COUNT.get_or_init(|| 10);
+        let result = part_one(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(40));
     }
 
@@ -106,6 +154,6 @@ mod tests {
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
         CONNECTION_COUNT.get_or_init(|| 10);
-        assert_eq!(result, None);
+        assert_eq!(result, Some(25272));
     }
 }
